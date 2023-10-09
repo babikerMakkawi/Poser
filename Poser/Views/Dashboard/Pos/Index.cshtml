@@ -1,0 +1,363 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "POS";
+    Layout = "_Dashboard";
+}
+
+	<div class="row">
+		<div class="col-xl-4 order-xl-first order-last">
+			<div class="card card-custom gutter-b bg-white border-0">
+				<div class="card-body">
+					<div class="d-flex justify-content-between colorfull-select">
+						<div class="selectmain">
+							<select class="arabic-select w-150px bag-primary ms-offscreen" style="">
+								<option value="1">Men's</option>
+								<option value="2">Accessories</option>
+							</select><div class="ms-parent arabic-select w-150px bag-primary" title="" style="width: 150px;">
+								<button type="button" class="ms-choice">
+									<span class="">Men's</span>
+
+									<div class="icon-caret"></div>
+								</button><div class="ms-drop bottom" style="display: none;">
+									<div class="ms-search">
+										<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="">
+									</div>
+									<ul style="max-height: 250px;">
+										<li class=" hide-radio selected ">
+											<label class="">
+												<input type="radio" value="1" data-key="option_0" data-name="selectItem" checked="checked">
+												<span>Men's</span>
+											</label>
+										</li>
+
+										<li class=" hide-radio ">
+											<label class="">
+												<input type="radio" value="2" data-key="option_1" data-name="selectItem">
+												<span>Accessories</span>
+											</label>
+										</li>
+										<li class="ms-no-results" style="display: none;">No matches found</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<div class="selectmain">
+							<select class="arabic-select w-150px bag-secondary ms-offscreen" style="">
+								<option value="1">Men's</option>
+								<option value="2">Accessories</option>
+							</select><div class="ms-parent arabic-select w-150px bag-secondary" title="" style="width: 150px;">
+								<button type="button" class="ms-choice">
+									<span class="">Men's</span>
+
+									<div class="icon-caret"></div>
+								</button><div class="ms-drop bottom" style="display: none;">
+									<div class="ms-search">
+										<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="">
+									</div>
+									<ul style="max-height: 250px;">
+										<li class=" hide-radio selected ">
+											<label class="">
+												<input type="radio" value="1" data-key="option_0" data-name="selectItem" checked="checked">
+												<span>Men's</span>
+											</label>
+										</li>
+
+										<li class=" hide-radio ">
+											<label class="">
+												<input type="radio" value="2" data-key="option_1" data-name="selectItem">
+												<span>Accessories</span>
+											</label>
+										</li>
+										<li class="ms-no-results" style="display: none;">No matches found</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="product-items">
+					<div class="row">
+						<div class="col-xl-4 col-lg-2 col-md-3 col-sm-4 col-6">
+							<div class="productCard">
+								<div class="productThumb">
+									<img class="img-fluid" src="./assets/images/carousel/element-banner2-right.jpg" alt="ix">
+								</div>
+								<div class="productContent">
+									<a href="#">
+										Men Polo Shirt (M) -MPS[2545-P]
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-2 col-md-3 col-sm-4 col-6">
+							<div class="productCard">
+								<div class="productThumb">
+									<img class="img-fluid" src="./assets/images/carousel/element-banner2-right.jpg" alt="ix">
+								</div>
+								<div class="productContent">
+									<a href="#">
+										Men Polo Shirt (M) -MPS[2545-P]
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+		<div class="col-xl-5 col-lg-8 col-md-8">
+			<div class="">
+				<div class="card card-custom gutter-b bg-white border-0 table-contentpos">
+					<div class="card-body">
+						<div class="d-flex justify-content-between colorfull-select">
+							<div class="selectmain">
+								<label class="text-dark d-flex">
+									Choose a Customer
+									<span class="badge badge-secondary white rounded-circle" data-toggle="modal" data-target="#choosecustomer">
+									</span>
+
+								</label>
+								<select class="arabic-select select-down ms-offscreen" style="">
+									<option value="1">walk in customer</option>
+								</select><div class="ms-parent arabic-select select-down " title="" style="width: 205px;">
+									<button type="button" class="ms-choice">
+										<span class="">walk in customer</span>
+
+										<div class="icon-caret"></div>
+									</button><div class="ms-drop bottom">
+										<div class="ms-search">
+											<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="">
+										</div>
+										<ul>
+											<li class=" hide-radio selected ">
+												<label class="">
+													<input type="radio" value="1" data-key="option_0" data-name="selectItem" checked="checked">
+													<span>walk in customer</span>
+												</label>
+											</li>
+											<li class="ms-no-results">No matches found</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+
+							<div class="d-flex flex-column selectmain">
+								<label class="text-dark d-flex">
+									Shipping Address
+									<span class="badge badge-secondary white rounded-circle" data-toggle="modal" data-target="#shippingpop">
+									</span>
+
+								</label>
+								<select class="arabic-select select-down ms-offscreen" style="">
+									<option value="1">Men's</option>
+									<option value="2">Accessories</option>
+								</select><div class="ms-parent arabic-select select-down" title="" style="width: 205px;">
+									<button type="button" class="ms-choice">
+										<span class="">Men's</span>
+
+										<div class="icon-caret"></div>
+									</button><div class="ms-drop bottom">
+										<div class="ms-search">
+											<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="">
+										</div>
+										<ul>
+											<li class=" hide-radio selected ">
+												<label class="">
+													<input type="radio" value="1" data-key="option_0" data-name="selectItem" checked="checked">
+													<span>Men's</span>
+												</label>
+											</li>
+
+											<li class=" hide-radio ">
+												<label class="">
+													<input type="radio" value="2" data-key="option_1" data-name="selectItem">
+													<span>Accessories</span>
+												</label>
+											</li>
+											<li class="ms-no-results">No matches found</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card card-custom gutter-b bg-white border-0 table-contentpos">
+					<div class="card-body">
+						<div class="form-group row mb-0">
+							<div class="col-md-12">
+								<label>Select Product</label>
+								<fieldset class="form-group mb-0 d-flex barcodeselection">
+									<select class="form-control w-25" id="exampleFormControlSelect1">
+										<option>Name</option>
+										<option>SKU</option>
+									</select>
+									<input type="text" class="form-control border-dark" id="basicInput1" placeholder="">
+								</fieldset>
+							</div>
+						</div>
+					</div>
+					<div class="table-datapos">
+						<div class="table-responsive" id="printableTable">
+							<table id="orderTable" class="display" style="width:100%">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Quantity</th>
+										<th>Discount</th>
+										<th>Subtotal</th>
+										<th class=" text-right no-sort"></th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									<tr>
+										<td>Tiger Nixon</td>
+										<td>
+											<input type="number" value="10" class="form-control border-dark w-100px" id="basicInput6" placeholder="">
+										</td>
+										<td>000</td>
+										<td>000</td>
+										<td>
+											<div class="card-toolbar text-right">
+												<a href="#" class="confirm-delete" title="Delete"><i class="fas fa-trash-alt"></i></a>
+											</div>
+										</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="form-group row mb-0">
+							<div class="col-md-12 btn-submit d-flex justify-content-end">
+								<button type="submit" class="btn btn-danger mr-2 confirm-delete" title="Delete">
+									<i class="fas fa-trash-alt mr-2"></i>
+									Suspand/Cancel
+								</button>
+								<button type="submit" class="btn btn-secondary white">
+									Draft Order
+								</button>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-3 col-lg-4 col-md-4">
+			<div class="card card-custom gutter-b bg-white border-0">
+				<div class="card-body">
+					<div class="shop-profile">
+						<div class="media">
+							<div class="bg-primary w-100px h-100px d-flex justify-content-center align-items-center">
+								<h2 class="mb-0 white">K</h2>
+							</div>
+							<div class="media-body ml-3">
+								<h3 class="title font-weight-bold">The Kundol Shop</h3>
+								<p class="phoonenumber">
+									02199+(070)234-4569
+								</p>
+								<p class="adddress">
+									Russel st 50,Bostron,MA
+								</p>
+								<p class="countryname">USA</p>
+							</div>
+						</div>
+					</div>
+					<div class="resulttable-pos">
+						<table class="table right-table">
+
+							<tbody>
+								<tr class="d-flex align-items-center justify-content-between">
+									<th class="border-0 font-size-h5 mb-0 font-size-bold text-dark">
+										Total Items
+									</th>
+									<td class="border-0 justify-content-end d-flex text-dark font-size-base">6</td>
+
+								</tr>
+								<tr class="d-flex align-items-center justify-content-between">
+									<th class="border-0 font-size-h5 mb-0 font-size-bold text-dark">
+										Subtotal
+									</th>
+									<td class="border-0 justify-content-end d-flex text-dark font-size-base">$900</td>
+
+								</tr>
+								<tr class="d-flex align-items-center justify-content-between">
+									<th class="border-0 ">
+										<div class="d-flex align-items-center font-size-h5 mb-0 font-size-bold text-dark">
+											DISCOUNT(65%)
+											<span class="badge badge-secondary white rounded-circle ml-2" data-toggle="modal" data-target="#discountpop">
+											</span>
+
+										</div>
+									</th>
+									<td class="border-0 justify-content-end d-flex text-dark font-size-base">10%</td>
+
+								</tr>
+								<tr class="d-flex align-items-center justify-content-between">
+									<th class="border-0 font-size-h5 mb-0 font-size-bold text-dark">
+										Tax
+									</th>
+									<td class="border-0 justify-content-end d-flex text-dark font-size-base">$9</td>
+
+								</tr>
+								<tr class="d-flex align-items-center justify-content-between">
+									<th class="border-0">
+										<div class="d-flex align-items-center font-size-h5 mb-0 font-size-bold text-dark">
+											Shipping Cost
+											<span class="badge badge-secondary white rounded-circle ml-2" data-toggle="modal" data-target="#shippingcost">
+											</span>
+
+										</div>
+									</th>
+									<td class="border-0 justify-content-end d-flex text-dark font-size-base">$0</td>
+
+								</tr>
+								<tr class="d-flex align-items-center justify-content-between">
+									<th class="border-0 font-size-h5 mb-0 font-size-bold text-dark">
+										Additional Disscount(15%)
+									</th>
+									<td class="border-0 justify-content-end d-flex text-dark font-size-base">$9</td>
+
+								</tr>
+								<tr class="d-flex align-items-center justify-content-between item-price">
+									<th class="border-0 font-size-h5 mb-0 font-size-bold text-primary">
+
+										TOTAL
+									</th>
+									<td class="border-0 justify-content-end d-flex text-primary font-size-base">$81000</td>
+
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+					<div class="d-flex justify-content-end align-items-center flex-column buttons-cash">
+						<div>
+							<a href="#" class="btn btn-primary white mb-2" data-toggle="modal" data-target="#payment-popup">
+								<i class="fas fa-money-bill-wave mr-2"></i>
+								Pay With Cash
+							</a>
+
+						</div>
+						<div>
+							<a href="#" class="btn btn-outline-secondary ">
+								<i class="fas fa-credit-card mr-2"></i>
+								Pay With Card
+							</a>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

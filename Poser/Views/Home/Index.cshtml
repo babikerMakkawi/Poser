@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<button class="btn btn-primary mt-3" id="seed-categories">Seed Categories</button>
+<button class="btn btn-primary mt-3" id="seed-brands">Seed Brands</button>
+<button class="btn btn-primary mt-3" id="seed-products">Seed Products</button>
+<button class="btn btn-primary mt-3" id="seed-customers">Seed customers</button>
+
+
+<script>
+    //Seed Data Button
+    document.getElementById("seed-categories").addEventListener("click", function () {
+        fetch('/Seeder/SeedCategories/')
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (html) {
+                window.alert("Data Seeded Successfully");
+            })
+            .catch(function (error) {
+                window.alert("Something Went Wrong!")
+            });
+    });
+    
+    document.getElementById("seed-brands").addEventListener("click", function () {
+        fetch('/Seeder/SeedBrands/')
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (html) {
+                window.alert("Data Seeded Successfully");
+            })
+            .catch(function (error) {
+                window.alert("Something Went Wrong!")
+            });
+    });
+    
+    document.getElementById("seed-products").addEventListener("click", function () {
+        fetch('/Seeder/SeedProducts/')
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (html) {
+                window.alert("Data Seeded Successfully");
+            })
+            .catch(function (error) {
+                window.alert("Something Went Wrong!")
+            });
+    });
+    
+    document.getElementById("seed-customers").addEventListener("click", function () {
+        fetch('/Seeder/SeedCustomers/')
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (html) {
+                window.alert("Data Seeded Successfully");
+            })
+            .catch(function (error) {
+                window.alert("Something Went Wrong!")
+            });
+    });
+</script>
