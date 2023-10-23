@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace Poser.Controllers
 {
+    //[Route("/Home/")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -17,12 +18,8 @@ namespace Poser.Controllers
 		{
 			return View("../Dashboard/index");
 		}
-		public IActionResult Pos()
-		{
-			return View("../Dashboard/Pos/index");
-		}
 
-		public IActionResult Privacy()
+        public IActionResult Privacy()
         {
             return View();
         }

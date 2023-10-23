@@ -10,7 +10,7 @@ namespace Poser.Models.Products
         public int Id { get; set; }
         public int AttributeId { get; set; }
         [ForeignKey("AttributeId")]
-        public Models.Products.Attribute Attribute { get; set; } = null!;
+        public Models.Products.Attribute Attribute { get; set; }
 
         [Required]
         public string Name { get; set; } = null!;

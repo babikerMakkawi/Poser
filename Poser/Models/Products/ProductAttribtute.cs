@@ -14,16 +14,16 @@ namespace Poser.Models.Products
         public int AttributeValueId { get; set; }
 
         [ForeignKey("ProductId")]
-        public Product? Product { get; set; }
+        public Product Product { get; set; }
 
         [ForeignKey("ProductStockId")]
-        public ProductStock? ProductStock { get; set; }
+        public ProductStock ProductStock { get; set; }
 
         [ForeignKey("AttributeId")]
-        public Models.Products.Attribute? Attribute { get; set; }
+        public Models.Products.Attribute Attribute { get; set; }
 
         [ForeignKey("AttributeValueId")]
-        public AttributeValue? AttributeValue { get; set; }
+        public AttributeValue AttributeValue { get; set; }
 
         //1 (Polo Frenzy #12432c T-Shirt), 1, [1 color,1 red]
         //1 (Polo Frenzy #12432c T-Shirt), 1, [2 size ,1 xl]

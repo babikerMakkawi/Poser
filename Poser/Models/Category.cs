@@ -14,7 +14,7 @@ namespace Poser.Models
         public string Slug { get; set; } = null!;
         public int? ParentId { get; set; }
         [ForeignKey("ParentId")]
-        public virtual Category? ParentCategory { get; set; }
+        public virtual Category ParentCategory { get; set; }
         public virtual ICollection<Category> ChildCategories { get; set; } = new List<Category>();
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }

@@ -14,25 +14,25 @@ namespace Poser.Models.Products
         [Display(Name = "Product Name")]
         public string Name { get; set; } = null!;
 
-        public string? Slug {get => Name?.ToLower().Replace(" ", "-");}
+        public string Slug {get => Name.ToLower().Replace(" ", "-");}
 
         [DataType(DataType.Upload)]
         [FileExtensions(Extensions = ".jpg,.jpeg,.png")]
-        public string? Image { get; set; }
+        public string Image { get; set; } = null!;
 
-        public string? Description { get; set; } = null!;
+        public string Description { get; set; } = null!;
 
         [Display(Name = "PBrand")]
-        public int? BrandId { get; set; }
+        public int BrandId { get; set; }
 
         [Display(Name = "PCategory")]
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         [ForeignKey("BrandId")]
-        public Brand? Brand { get; set; }
+        public Brand Brand { get; set; }
 
         [ForeignKey("CategoryId")]
-        public Category? Category { get; set; }
+        public Category Category { get; set; }
 
         public bool IsActive { get; set; } = true;
 

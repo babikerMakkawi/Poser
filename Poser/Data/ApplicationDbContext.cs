@@ -10,25 +10,25 @@ namespace Poser.Data
     public class ApplicationDbContext : IdentityDbContext
     {
         /// </Customers>
-        public DbSet<Customer>? Customers { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         /// <Brands - Categories>
-        public DbSet<Brand>? Brands { get; set; }
-        public DbSet<Category>? Categories { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         /// <Attributes>
-        public DbSet<Models.Products.Attribute>? Attributes { get; set; }
-        public DbSet<AttributeValue>? AttributeValues { get; set; }
+        public DbSet<Models.Products.Attribute> Attributes { get; set; }
+        public DbSet<AttributeValue> AttributeValues { get; set; }
 
         /// <Products>
-        public DbSet<Product>? Products { get; set; }
-        public DbSet<ProductStock>? ProductStocks { get; set; }
-        public DbSet<ProductAttribute>? ProductAttributes { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductStock> ProductStocks { get; set; }
+        public DbSet<ProductAttribute> ProductAttributes { get; set; }
 
         /// </Orders>
-        public DbSet<Order>? Orders { get; set; }
-        public DbSet<OrderProduct>? OrderProducts { get; set; }
-        public DbSet<PaymentMethod>? PaymentMethods { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderProduct> OrderProducts { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

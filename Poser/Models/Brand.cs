@@ -12,7 +12,7 @@ namespace Poser.Models
         public string Name { get; set; } = null!;
         public string Slug { get; set; } = null!;
 
-        public string? Image { get; set; } = null!;
+        public string Image { get; set; } = null!;
 
         public ICollection<Product> Products { get; set; } = new List<Product>();
     }

@@ -14,7 +14,16 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddControllers().AddNewtonsoftJson(
+    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    );
+
 builder.Services.AddControllersWithViews();
+    //.AddJsonOptions(options =>
+    //{
+    //    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    //});
 
 builder.Services.AddSignalR();
 
@@ -39,12 +48,27 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
 app.UseAuthorization();
+app.UseAuthentication();
+
+app.UseEndpoints(endpoints =>
+    { 
+        endpoints.MapControllerRoute(
+        name: "posRoute",
+        pattern: "Pos",
+        defaults: new { controller = "Home", action = "Pos" });
+
+        endpoints.MapControllerRoute(
+        name: "posRoute",
+        pattern: "Products/Attributes",
+        defaults: new { controller = "Attributes", action = "Index" });
+
+    });
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();

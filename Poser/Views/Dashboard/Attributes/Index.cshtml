@@ -1,0 +1,407 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Products Attributes";
+    Layout = "_Dashboard";
+}
+
+
+
+<h1 class="h3 mb-2 text-gray-800">Products Attributes</h1>
+
+<!-- Datatable -->
+<div class="card mt-3">
+    <div class="card-header">
+        <button class="btn btn-primary" id="create-Attribute" data-bs-toggle="modal" data-bs-target="#AttributeModal">Create New Attribute</button>
+    </div>
+    <div class="card-body">
+        <table class="table table-light table-hover m-0 w-100" id="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="json-table-viewer">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Attribute Modal -->
+<div class="modal fade" id="AttributeModal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content" id="modal-content">
+            @* modal content *@
+        </div>
+    </div>
+</div>
+
+<!-- Attribute Value Modal -->
+<div class="modal fade" id="AttributeValueModal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="AttributeValue-modal-content">
+            @* modal content *@
+        </div>
+    </div>
+</div>
+
+
+<script>
+    //  ATTRIBUTES VALUES JS CONTROLLERS
+    function CreateAttributeValueModal(attributeId) {
+
+        var modalContent = document.getElementById("AttributeValue-modal-content");
+
+        fetch('/Products/AttributeValues/CreateAttributeValue/' + attributeId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/html"
+            }
+        })
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (html) {
+                modalContent.innerHTML = html;
+
+                $.validator.unobtrusive.parse("#CreateAttributeValueModal");
+            })
+            .catch(function (error) {
+                console.error('Error loading content:', error);
+            });
+    }
+
+    function CreateAttributeValue(form) {
+        event.preventDefault();
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/Products/AttributeValues/CreateAction",
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    // $('.modal-backdrop').remove();
+                    // $('#AttributeModal').modal('hide');
+                }
+                showSuccessMessage(response.success ? "success" : "error", response.message);
+            },
+            error: function (xhr, status, error) {
+                showSuccessMessage("error", "Attribute Didn't Created successfully!!!")
+            }
+        });
+
+    }
+    
+    function UpdateAttributeValueModal(attributeId){
+
+        // $('#AttributeModal').modal('hide');
+        // $('.modal-backdrop').remove();
+
+        var modalContent = document.getElementById("AttributeValue-modal-content");
+        modalContent.innerHTML = "";
+
+        fetch('/Products/AttributeValues/EditAttributeValue/' + attributeId)
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (html) {
+                modalContent.innerHTML = html;
+
+                $.validator.unobtrusive.parse("#updateAttributeValueModal");
+            })
+            .catch(function (error) {
+                console.error('Error loading content:', error);
+            })
+
+    }
+
+    function UpdateAttributeValue(form) {
+        event.preventDefault();
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/Products/AttributeValues/UpdateAction",
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    $('.modal-backdrop').remove();
+                    $('#AttributeModal').modal('hide');
+                }
+
+                showSuccessMessage(response.success ? "success" : "error", response.message);
+            },
+            error: function (xhr, status, error) {
+                showSuccessMessage("error", error)
+            }
+        });
+    }
+    
+    function DeleteAttributeValue(attributeValueId) {
+        Swal.fire({
+            title: 'Are you sure you want to delete this Attribute Value?',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Products/AttributeValues/Delete',
+                    type: 'POST',
+                    data: { id: attributeValueId },
+                    // headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                    success: function (response) {
+                        if (response.success) {
+                            $('.modal-backdrop').remove();
+                            $('#AttributeModal').modal('hide');
+                        }
+
+                        showSuccessMessage(response.success ? "success" : "error", response.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+
+    }
+
+
+
+    //  ATTRIBUTES JS CONTROLLERS
+    document.addEventListener("DOMContentLoaded", function () {
+        getJsonData();
+    });
+
+    document.getElementById("create-Attribute").addEventListener("click", function () {
+        var modalContent = document.getElementById("modal-content");
+
+        fetch('/Products/Attributes/CreateAttribute/', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "text/html"
+                }
+            })
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (html) {
+                modalContent.innerHTML = html;
+
+                $.validator.unobtrusive.parse("#createAttributeModal");
+            })
+            .catch(function (error) {
+                console.error('Error loading content:', error);
+            });
+    });
+
+
+    //Fetch Data
+    function getJsonData() {
+        fetch('/Products/Attributes/getjsondata/')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (attributes) {
+                var attributesHtml = '';
+
+                let table = new DataTable('#data-table');
+                table.clear().draw();
+
+                if (attributes.length > 0) {
+                    attributes.forEach(function (attribute) {
+                        attributesHtml += '<tr>' +
+                            '<td>' + attribute.id + '</td>' +
+                            '<td><a href="/Products/Attributes/Details/' + attribute.id + '">' + attribute.name + '</a></td>' +
+                            '<td>' +
+                                '<div class="btn-group" role="group" aria-label="Basic example">' +
+
+                                '<button type="button" class="btn btn-info text-white edit-attribute"' +
+                            ' data-bs-toggle="modal" data-bs-target="#AttributeModal"' +
+                                ' data-attribute-id="' + attribute.id + '">' +
+                                'Edit' +
+                                '</button>' +
+
+                                '<button type="button" class="btn btn-warning text-white delete-attribute"' +
+                            ' data-bs-toggle="modal" data-bs-target="#AttributeModal"' +
+                                ' data-attribute-id="' + attribute.id + '">' +
+                                'Delete' +
+                                '</button>' +
+
+                                '</div>' +
+                            '</td>' +
+                            '</tr>';
+                    });
+                }
+                else {
+                    attributesHtml += '<tr>' +
+                        '<td colspan="4" class="text-center fs-5 py-5 text-danger">There`s No Attributes Data Available</td>' +
+                        '<td style="display:none;"></td>' +
+                        '<td style="display:none;"></td>' +
+                        '<td style="display:none;"></td>' +
+                        '</tr>';
+                }
+
+                table.rows.add($(attributesHtml)).draw();
+            })
+            .then(function () {
+                AllButtonListeners();
+            })
+            .then(function () {
+                let table = new DataTable('#data-table');
+            })
+            .catch(function (error) {
+                showSuccessMessage("error", "Attribute Didn't Fetched Successfully!" + error)
+
+                console.log("Something Went Wrong!" + error);
+            });
+    }
+
+    //Edit & Delete Buttons Listeners
+    function AllButtonListeners() {
+        // Edit Buttons
+        var editButtons = document.querySelectorAll(".edit-attribute");
+        editButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+
+                var attributeId = this.getAttribute("data-attribute-id");
+                var modalContent = document.getElementById("modal-content");
+
+                modalContent.innerHTML = "";
+
+                fetch('/Products/Attributes/EditAttribute/' + attributeId)
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (html) {
+                        modalContent.innerHTML = html;
+
+                        $.validator.unobtrusive.parse("#updateAttributeModal");
+                    })
+                    .catch(function (error) {
+                        console.error('Error loading content:', error);
+                    })
+            });
+        });
+
+        var editButtons = document.querySelectorAll(".delete-attribute");
+        editButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+
+                var attributeId = this.getAttribute("data-attribute-id");
+                var modalContent = document.getElementById("modal-content");
+
+                // Load content using fetch
+                fetch('/Products/Attributes/DeleteAttribute/' + attributeId)
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (html) {
+                        modalContent.innerHTML = html;
+                    })
+                    .catch(function (error) {
+                        console.error('Error loading content:', error);
+                    });
+            });
+        });
+    }
+
+
+    //Create Attribute Function
+    function CreateAttribute(form) {
+        event.preventDefault();
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/Products/Attributes/CreateAction",
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    // $(form).closest(".modal").modal("hide");
+                    $('.modal-backdrop').remove();
+                    $('#AttributeModal').modal('hide');
+                    getJsonData();
+                }
+                showSuccessMessage(response.success ? "success" : "error", response.message);
+            },
+            error: function (xhr, status, error) {
+                showSuccessMessage("error", "Attribute Didn't Created successfully!!!")
+            }
+        });
+    }
+
+    //Update Attribute Function
+    function UpdateAttribute(form) {
+        event.preventDefault();
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/Products/Attributes/UpdateAction",
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    $('.modal-backdrop').remove();
+                    $('#AttributeModal').modal('hide');
+                    getJsonData();
+                }
+
+                showSuccessMessage(response.success ? "success" : "error", response.message);
+            },
+            error: function (xhr, status, error) {
+                showSuccessMessage("error", error)
+            }
+        });
+    }
+
+    //Delete Attribute Function
+    function DeleteAttribute(attributeId) {
+        Swal.fire({
+            title: 'Are you sure you want to delete this Attribute?',
+            showCancelButton: true,
+            confirmButtonText: 'Save',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Products/Attributes/Delete',
+                    type: 'POST',
+                    data: { id: attributeId },
+                    headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                    success: function (response) {
+                        if (response.success) {
+                            $('.modal-backdrop').remove();
+                            $('#AttributeModal').modal('hide');
+                            getJsonData();
+                        }
+
+                        showSuccessMessage(response.success ? "success" : "error", response.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+
+    //Sweet Alert
+    function showSuccessMessage(icon, message) {
+        Swal.fire({
+            icon: icon || 'success',
+            title: "Poser",
+            text: message || "Operation Success",
+            timer: 5000
+        })
+    }
+                
+</script>

@@ -13,7 +13,7 @@ namespace Poser.Models.Orders
 
         [Required]
         [ForeignKey("PaymentMethodId")]
-        public PaymentMethod? PaymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
 
         public double Total { get; set; }
 
