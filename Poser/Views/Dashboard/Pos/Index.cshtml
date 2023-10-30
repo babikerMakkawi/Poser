@@ -16,3 +16,201 @@
 	</div>
 
 </div>
+
+@section Scripts{
+    <script>
+
+        // On Page Load
+        $(document).ready(function () {
+            GetProductsData();
+
+            // Initial The Products Datatable
+            $('#products-datatable').DataTable({
+                lengthChange: false,
+                paging: false,
+                pageLength: 1000,
+                ordering: false,
+                columns: [
+                    { data: 'id', visible: false },
+                    { data: 'name', visible: true },
+                    { data: 'qty', visible: true },
+                    { data: 'price', visible: true }, 
+                    { data: 'action', visible: true } 
+                ],
+                language: {
+                    emptyTable: "No Products in Cart",
+                    "info": "", // Customize the info message
+                    "infoEmpty": "" // Set the empty message to an empty string
+
+                },
+            });
+
+        });
+        
+        // Add To Datatable
+        function addToDatatable(product) {
+            var dataTable = $('#products-datatable').DataTable();
+            var rowIndex = -1;
+
+            dataTable.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                var data = this.data();
+                if (data.id === product["id"]) {
+                    rowIndex = rowIdx;
+                    return false; // Break the loop when the row is found
+                }
+            });
+
+            if (rowIndex !== -1) {
+                var rowData = dataTable.row(rowIndex).data();
+                rowData.qty += 1;
+
+                //TODO:: Modify The Product Price
+                rowData.price = rowData.id * rowData.qty;
+                dataTable.row(rowIndex).data(rowData).draw();
+            } else {
+                var removeButton = `<button class="btn btn-sm" onclick='removeRowById(` + product["id"] + `)'><i class="fas fa-trash text-danger"></i></button>`;
+                            
+                var newRowData = {
+                    id: product["id"],
+                    name: product["name"],
+                    qty: 1,
+                    price: product["id"],
+                    action: removeButton
+                };
+
+                dataTable.row.add(newRowData).draw();
+            }
+
+            calculateTotal();
+        }
+
+        // Remove Row From Datatable
+        function removeRowById(id) {
+            var dataTable = $('#products-datatable').DataTable();
+            var rowIndex = -1;
+
+            dataTable.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                var data = this.data();
+                if (data.id === id) {
+                    rowIndex = rowIdx;
+                    return false; // Break the loop when the row is found
+                }
+            });
+
+            if (rowIndex !== -1) {
+                dataTable.row(rowIndex).remove().draw();
+            } else {
+                console.log('Row with ID ' + id + ' not found.');
+            }
+            calculateTotal();
+        }
+
+        // Calculate Total Price
+        function calculateTotal(){
+            var dataTable = $('#products-datatable').DataTable();
+
+            var total = 0;
+
+            dataTable.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                var data = this.data();
+
+                total += data.price;
+            });
+
+            document.getElementById("total-invoice").innerText = total;
+            document.getElementById("total-items").innerText = dataTable.rows().count();
+        }
+
+        //Fetch Data products-section
+        function GetProductsData(categoryId){
+            var apiUrl = '/Pos/GetProductsData/';
+            if (categoryId) {
+                apiUrl += '?categoryId=' + categoryId;
+            }
+
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                dataType: 'json'
+            })
+            .done(function (products) {
+                var productsContainer = $('#products-section');
+                productsContainer.empty(); // Clear previous content
+
+                if (products.length > 0) {
+                    products.forEach(function (product) {
+
+                        var productDiv = `
+                            <div style="width: 16.2%; cursor: pointer;" id="product-${product.id}">
+                                <div class="card">
+                                    <img class="card-img-top" src="${product.image}" alt="Image">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title">${product.name}</h6>
+                                    </div>
+                                </div>
+                            </div>`;
+
+                        productsContainer.append(productDiv);
+
+                        $('#product-' + product.id).click(function () {
+                            addToDatatable(product);
+                        });
+
+                    });
+                } else {
+                    productsContainer.text("There's No Products!"); // Prevent HTML injection
+                }
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                ShowMessageDialog("error", "Products Didn't Fetched Successfully! " + errorThrown);
+                console.log("Something Went Wrong! " + errorThrown);
+            });
+        }
+
+        // Message Dialog
+        function ShowMessageDialog(icon, message) {
+            Swal.fire({
+                icon: icon || 'success',
+                title: "Poser",
+                text: message || "Operation Success",
+                timer: 5000
+            })
+        }
+
+        // Confirmation Payment
+        function MakePayment() {
+            Swal.fire({
+                title: 'Confirm Payment?',
+                showCancelButton: true,
+                confirmButtonText: 'Confirm',
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    var data = $('#products-datatable').DataTable().rows().data().toArray();
+
+                    $.ajax({
+                        url: '/Pos/MakePayment',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ products: data }),
+                        success: function (response) {
+                            if (response.success) {
+                                $('#products-datatable').DataTable().clear().draw();
+                                calculateTotal();
+                            }
+                                ShowMessageDialog(response.success ? "success" : "error", response.message);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("Error: " + error);
+                            ShowMessageDialog("error", error);
+                        }
+                    });
+                } else if (result.isDenied) {
+                    ShowMessageDialog("error", 'Payment Problem');
+                }
+            });
+
+        }
+
+        </script>
+}

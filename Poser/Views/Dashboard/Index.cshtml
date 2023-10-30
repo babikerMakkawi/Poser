@@ -11,57 +11,76 @@
 <button class="btn btn-primary mt-3" id="seed-products">Seed Products</button>
 <button class="btn btn-primary mt-3" id="seed-customers">Seed customers</button>
 
-<script>
-    //Seed Data Button
-    document.getElementById("seed-categories").addEventListener("click", function () {
-        fetch('/Seeder/SeedCategories/')
-            .then(function (response) {
-                return response.text();
-            })
-            .then(function (html) {
-                window.alert("Data Seeded Successfully");
-            })
-            .catch(function (error) {
-                window.alert("Something Went Wrong!")
-            });
-    });
+<button class="btn btn-primary mt-3" id="seed-basic-data">Re Seed All Basic Data</button>
 
-    document.getElementById("seed-brands").addEventListener("click", function () {
-        fetch('/Seeder/SeedBrands/')
-            .then(function (response) {
-                return response.text();
-            })
-            .then(function (html) {
-                window.alert("Data Seeded Successfully");
-            })
-            .catch(function (error) {
-                window.alert("Something Went Wrong!")
-            });
-    });
 
-    document.getElementById("seed-products").addEventListener("click", function () {
-        fetch('/Seeder/SeedProducts/')
-            .then(function (response) {
-                return response.text();
-            })
-            .then(function (html) {
-                window.alert("Data Seeded Successfully");
-            })
-            .catch(function (error) {
-                window.alert("Something Went Wrong!")
-            });
-    });
 
-    document.getElementById("seed-customers").addEventListener("click", function () {
-        fetch('/Seeder/SeedCustomers/')
-            .then(function (response) {
-                return response.text();
-            })
-            .then(function (html) {
-                window.alert("Data Seeded Successfully");
-            })
-            .catch(function (error) {
-                window.alert("Something Went Wrong!")
-            });
-    });
-</script>
+@section Scripts{
+    <script>
+        //Seed Data Button
+        document.getElementById("seed-categories").addEventListener("click", function () {
+            fetch('/Seeder/SeedCategories/')
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (html) {
+                    window.alert("Data Seeded Successfully");
+                })
+                .catch(function (error) {
+                    window.alert("Something Went Wrong!")
+                });
+        });
+
+        document.getElementById("seed-brands").addEventListener("click", function () {
+            fetch('/Seeder/SeedBrands/')
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (html) {
+                    window.alert("Data Seeded Successfully");
+                })
+                .catch(function (error) {
+                    window.alert("Something Went Wrong!")
+                });
+        });
+
+        document.getElementById("seed-products").addEventListener("click", function () {
+            fetch('/Seeder/SeedProducts/')
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (html) {
+                    window.alert("Data Seeded Successfully");
+                })
+                .catch(function (error) {
+                    window.alert("Something Went Wrong!")
+                });
+        });
+
+        document.getElementById("seed-customers").addEventListener("click", function () {
+            fetch('/Seeder/SeedCustomers/')
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (html) {
+                    window.alert("Data Seeded Successfully");
+                })
+                .catch(function (error) {
+                    window.alert("Something Went Wrong!")
+                });
+        });
+
+        document.getElementById("seed-basic-data").addEventListener("click", function () {
+            fetch('/Seeder/ReSeedBasicData/')
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (html) {
+                    window.alert("All Data ReSeeded Successfully");
+                })
+                .catch(function (error) {
+                    window.alert("Something Went Wrong!")
+                });
+        });
+    </script>
+}

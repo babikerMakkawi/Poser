@@ -33,46 +33,6 @@ html {
   min-height: 100%;
 }
 
-
-/* Apply scrollbar styles to all elements */
-*::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-    position: relative;
-    opacity: 0; /* Initially set scrollbar to be transparent */
-    transition: opacity 0.3s ease; /* Apply a smooth transition effect */
-}
-
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #c1c1c1 transparent;
-}
-
-    /* Webkit (Chrome, Safari, etc.) scrollbar styles for both vertical and horizontal */
-    *::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    *::-webkit-scrollbar-thumb {
-        background-color: #c1c1c1;
-        border-radius: 20px;
-        border: 2px solid transparent;
-    }
-
-        /* Webkit horizontal scrollbar styles */
-        *::-webkit-scrollbar-thumb:horizontal {
-            border-color: #c1c1c1 transparent;
-        }
-
-/* Style the div where you want to hide the scrollbar */
-.hide-scrollbar {
-    overflow: auto;
-    max-height: 300px; /* Set a maximum height to enable scrolling */
-}
-
-.hide-scrollbar:hover {
-    *::-webkit-scrollbar
-    {
-        opacity: 1; /* Set scrollbar to be visible */
-    }
+.dropdown-menu[data-bs-popper] {
+    left: -100px !important;
 }

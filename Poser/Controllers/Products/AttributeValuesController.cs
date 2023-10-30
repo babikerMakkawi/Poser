@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Poser.Data;
-using Poser.Models.Products;
+using Poser.EF;
 
 namespace Poser.Controllers.Products
 {
@@ -39,7 +32,7 @@ namespace Poser.Controllers.Products
         
         [HttpPost]
         [Route("CreateAction")]
-        public ActionResult CreateAction(Models.Products.AttributeValue attributeValue)
+        public ActionResult CreateAction(Poser.Core.Models.Products.AttributeValue attributeValue)
         {
             if (attributeValue.Name == null)
             {
@@ -86,7 +79,7 @@ namespace Poser.Controllers.Products
         }
         
         [HttpPost("UpdateAction")]
-        public ActionResult UpdateAction(Models.Products.AttributeValue attributeValue)
+        public ActionResult UpdateAction(Poser.Core.Models.Products.AttributeValue attributeValue)
         {
             if (attributeValue.Name == null)
             {

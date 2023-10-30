@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Poser.Data;
+using Poser.EF;
 
 namespace Poser.Controllers
 {
@@ -27,7 +27,41 @@ namespace Poser.Controllers
         }
         public void SeedCustomers()
         {
-            Data.Seeders.CustomerSeeder.SeedData(_context);
+            //Data.Seeders.CustomerSeeder.SeedData(_context);
+            Data.Seeders.Products.ProductAttributeSeeder.SeedData(_context);
         }
+        public void ReSeedBasicData()
+        {
+            string[] names = { 
+                "Categories",
+                "Brands",
+                "Orders",
+                "Customers",
+
+                "ProductAttributes",
+
+                "AttributeValues",
+                "Attributes",
+
+                "ProductStocks",
+                "Products",
+
+                "PaymentMethods",
+            };
+
+            foreach (string name in names)
+            {
+                _context.Database.ExecuteSqlRaw($"DELETE FROM {name}; DBCC CHECKIDENT ('{name}', RESEED, 0);");
+            }
+
+            Data.Seeders.CategorySeeder.SeedData(_context);
+            Data.Seeders.BrandSeeder.SeedData(_context);
+            Data.Seeders.ProductSeeder.SeedData(_context);
+            Data.Seeders.CustomerSeeder.SeedData(_context);
+            Data.Seeders.PaymentMethodSeeder.SeedData(_context);
+            Data.Seeders.AttributeSeeder.SeedData(_context);
+            Data.Seeders.Products.ProductAttributeSeeder.SeedData (_context);
+        }
+
     }
 }

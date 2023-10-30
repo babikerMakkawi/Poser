@@ -1,29 +1,35 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Poser.Data;
+using Poser.Core.Interfaces;
+using Poser.EF;
 using Poser.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString)) ;
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
 builder.Services.AddControllers().AddNewtonsoftJson(
     options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
     );
 
-builder.Services.AddControllersWithViews();
-    //.AddJsonOptions(options =>
-    //{
-    //    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-    //});
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    });
+
+builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
 
@@ -62,7 +68,6 @@ app.UseEndpoints(endpoints =>
         name: "posRoute",
         pattern: "Products/Attributes",
         defaults: new { controller = "Attributes", action = "Index" });
-
     });
 
 app.MapControllerRoute(

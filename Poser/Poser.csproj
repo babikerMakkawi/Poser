@@ -1,31 +1,60 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-	  <Nullable>disable</Nullable>
+	  <Nullable>enable</Nullable>
 	  <!-- <Nullable>enable</Nullable> -->
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Poser-01cd1b9e-cae7-46e3-b440-d102d71b82a7</UserSecretsId>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Compile Remove="Models\**" />
+    <Content Remove="Data\**" />
+    <Content Remove="Models\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Data\**" />
+    <None Remove="Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Data\Seeders\AttributeAttrobuteValuesSeeder.cs" />
+    <Compile Include="Data\Seeders\BrandSeeder.cs" />
+    <Compile Include="Data\Seeders\CategorySeeder.cs" />
+    <Compile Include="Data\Seeders\CustomerSeeder.cs" />
+    <Compile Include="Data\Seeders\PaymentMethodSeeder.cs" />
+    <Compile Include="Data\Seeders\ProductSeeder.cs" />
+    <Compile Include="Data\Seeders\Products\ProductAttributeSeeder.cs" />
+    <Compile Include="Models\ErrorViewModel.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.21" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.21" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.24" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.21" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.21" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.21" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.23" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.23">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Views\Dashboard\Customers\" />
     <Folder Include="Views\Dashboard\Orders\" />
     <Folder Include="Views\Dashboard\Users\" />
-    <Folder Include="Views\Dashboard\Products\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -1820,6 +1849,10 @@
     <None Include="wwwroot\vendor\jquery\jquery.slim.js" />
     <None Include="wwwroot\vendor\jquery\jquery.slim.min.js" />
     <None Include="wwwroot\vendor\jquery\jquery.slim.min.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Poser.EF\Poser.EF.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Poser.Data;
+using Poser.Core;
 using Poser.SignalR;
 
 namespace Poser.Controllers

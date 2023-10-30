@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poser", "Poser\Poser.csproj", "{AB96ED44-78A6-4D3F-9373-B1118C0C2F77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Poser", "Poser\Poser.csproj", "{AB96ED44-78A6-4D3F-9373-B1118C0C2F77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poser.Core", "Poser.Core\Poser.Core.csproj", "{D6BDEE71-B59F-4C80-BF33-BCEC87A5A385}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poser.EF", "Poser.EF\Poser.EF.csproj", "{56800009-ECFB-45FC-8E43-B743ADF78593}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{AB96ED44-78A6-4D3F-9373-B1118C0C2F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB96ED44-78A6-4D3F-9373-B1118C0C2F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB96ED44-78A6-4D3F-9373-B1118C0C2F77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6BDEE71-B59F-4C80-BF33-BCEC87A5A385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6BDEE71-B59F-4C80-BF33-BCEC87A5A385}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6BDEE71-B59F-4C80-BF33-BCEC87A5A385}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6BDEE71-B59F-4C80-BF33-BCEC87A5A385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56800009-ECFB-45FC-8E43-B743ADF78593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56800009-ECFB-45FC-8E43-B743ADF78593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56800009-ECFB-45FC-8E43-B743ADF78593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56800009-ECFB-45FC-8E43-B743ADF78593}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

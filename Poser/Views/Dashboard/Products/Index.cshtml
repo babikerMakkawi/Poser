@@ -1,0 +1,419 @@
+﻿@{
+    ViewData["Title"] = "Products";
+    Layout = "_Dashboard";
+}
+
+<h1 class="h3 mb-2 text-gray-800">Products</h1>
+
+<!-- Datatable -->
+<div class="card mt-3">
+    <div class="card-header">
+        <button class="btn btn-primary" id="create-Product" data-bs-toggle="modal" data-bs-target="#ProductModal">Create New Product</button>
+    </div>
+    <div class="card-body">
+        <table class="table table-light table-hover m-0 w-100" id="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Is Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="json-table-viewer">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade" id="ProductModal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content" id="modal-content">
+            @* modal content *@
+        </div>
+    </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade" id="ProductStockModal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="ProductStock-modal-content">
+            @* modal content *@
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        // On Page Load
+        $(document).ready(function () { 
+            getJsonData();
+        });
+        
+    </script>
+}
+
+
+<script>
+    // ON PAGE LOAD
+
+
+    //  PRODUCTS JS CONTROLLERS
+    function CreateProductModal(productId) {
+        var modalContent = document.getElementById("Product-modal-content");
+
+        fetch('/Products/CreateProduct/' + productId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/html"
+            }
+        })
+        .then(function (response) {
+            return response.text();
+        })
+        .then(function (html) {
+            modalContent.innerHTML = html;
+            //Model Validator
+            // $.validator.unobtrusive.parse("#ProductModal");
+        })
+        .catch(function (error) {
+            console.error('Error loading content:', error);
+        });
+    }
+
+    // function CreateAttributeValue(form) {
+    //     event.preventDefault();
+    //     var formData = $(form).serialize();
+
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "/Products/AttributeValues/CreateAction",
+    //         data: formData,
+    //         success: function (response) {
+    //             if (response.success) {
+    //                 // $('.modal-backdrop').remove();
+    //                 // $('#AttributeModal').modal('hide');
+    //             }
+    //             ShowMessageDialog(response.success ? "success" : "error", response.message);
+    //         },
+    //         error: function (xhr, status, error) {
+    //             ShowMessageDialog("error", "Attribute Didn't Created successfully!!!")
+    //         }
+    //     });
+
+    // }
+
+    // function UpdateAttributeValueModal(attributeId) {
+
+    //     // $('#AttributeModal').modal('hide');
+    //     // $('.modal-backdrop').remove();
+
+    //     var modalContent = document.getElementById("AttributeValue-modal-content");
+    //     modalContent.innerHTML = "";
+
+    //     fetch('/Products/AttributeValues/EditAttributeValue/' + attributeId)
+    //         .then(function (response) {
+    //             return response.text();
+    //         })
+    //         .then(function (html) {
+    //             modalContent.innerHTML = html;
+
+    //             $.validator.unobtrusive.parse("#updateAttributeValueModal");
+    //         })
+    //         .catch(function (error) {
+    //             console.error('Error loading content:', error);
+    //         })
+
+    // }
+
+    // function UpdateAttributeValue(form) {
+    //     event.preventDefault();
+    //     var formData = $(form).serialize();
+
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "/Products/AttributeValues/UpdateAction",
+    //         data: formData,
+    //         success: function (response) {
+    //             if (response.success) {
+    //                 $('.modal-backdrop').remove();
+    //                 $('#AttributeModal').modal('hide');
+    //             }
+
+    //             ShowMessageDialog(response.success ? "success" : "error", response.message);
+    //         },
+    //         error: function (xhr, status, error) {
+    //             ShowMessageDialog("error", error)
+    //         }
+    //     });
+    // }
+
+    // function DeleteAttributeValue(attributeValueId) {
+    //     Swal.fire({
+    //         title: 'Are you sure you want to delete this Attribute Value?',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Confirm',
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             $.ajax({
+    //                 url: '/Products/AttributeValues/Delete',
+    //                 type: 'POST',
+    //                 data: { id: attributeValueId },
+    //                 // headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+    //                 success: function (response) {
+    //                     if (response.success) {
+    //                         $('.modal-backdrop').remove();
+    //                         $('#AttributeModal').modal('hide');
+    //                     }
+
+    //                     ShowMessageDialog(response.success ? "success" : "error", response.message);
+    //                 },
+    //                 error: function (xhr, status, error) {
+    //                     console.log("Error: " + error);
+    //                 }
+    //             });
+    //         } else if (result.isDenied) {
+    //             Swal.fire('Changes are not saved', '', 'info')
+    //         }
+    //     })
+
+    // }
+
+
+
+    //  ATTRIBUTES JS CONTROLLERS
+    
+    document.getElementById("create-Product").addEventListener("click", function () {
+        var modalContent = document.getElementById("modal-content");
+
+        fetch('/Products/CreateProduct/', {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/html"
+            }
+        })
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (html) {
+                modalContent.innerHTML = html;
+
+                // $.validator.unobtrusive.parse("#createProductModal");
+            })
+            .catch(function (error) {
+                console.error('Error loading content:', error);
+            });
+    });
+
+    //Fetch Data
+    function getJsonData() {
+        fetch('/Products/getjsondata/')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (products) {
+                var productsHtml = '';
+
+                let table = new DataTable('#data-table');
+                table.clear().draw();
+
+                if (products.length > 0) {
+                    products.forEach(function (product) {
+                        productsHtml += '<tr>' +
+                            '<td>' + product.id + '</td>' +
+                            '<td>' + product.name + '</td>' +
+                            '<td>' + product.description + '</td>' +
+                            '<td>' + product.brand.name + '</td>' +
+                            '<td>' + product.category.name + '</td>' +
+                            '<td>' + (product.isActive ? "yes" : "No") + '</td>' +
+
+                            '<td>' +
+                            '<div class="btn-group" role="group" aria-label="Basic example">' +
+                                '<button type="button" class="btn btn-info text-white edit-product"' +
+                                ' data-bs-toggle="modal" data-bs-target="#ProductModal"' +
+                                ' data-product-id="' + product.id + '">' +
+                                'Edit' +
+                                '</button>' +
+                                '<button type="button" class="btn btn-warning text-white delete-product"' +
+                                ' data-bs-toggle="modal" data-bs-target="#ProductModal"' +
+                                ' data-product-id="' + product.id + '">' +
+                                'Delete' +
+                                '</button>' +
+                            '</div>' +
+
+                            '</td>' +
+                            '</tr>';
+                    });
+                }
+                else {
+                    productsHtml += '<tr>' +
+                        '<td colspan="7" class="text-center fs-5 py-5 text-danger">There`s No Psoducts Data Available</td>' +
+                        '<td style="display:none;"></td>' +
+                        '<td style="display:none;"></td>' +
+                        '<td style="display:none;"></td>' +
+                        '<td style="display:none;"></td>' +
+                        '<td style="display:none;"></td>' +
+                        '<td style="display:none;"></td>' +
+                        '</tr>';
+                }
+
+                table.rows.add($(productsHtml)).draw();
+            })
+            .then(function () {
+                AllButtonListeners();
+            })
+            .then(function () {
+                let table = new DataTable('#data-table');
+            })
+            .catch(function (error) {
+                ShowMessageDialog("error", "Products Didn't Fetched Successfully!" + error)
+
+                console.log("Something Went Wrong!" + error);
+            });
+    }
+
+    //Edit & Delete Buttons Listeners
+    function AllButtonListeners() {
+        // Edit Buttons
+        var editButtons = document.querySelectorAll(".edit-product");
+        editButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+
+                var productId = this.getAttribute("data-product-id");
+                var modalContent = document.getElementById("modal-content");
+
+                modalContent.innerHTML = "";
+
+                fetch('/Products/EditProduct/' + productId)
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (html) {
+                        modalContent.innerHTML = html;
+
+                        $.validator.unobtrusive.parse("#updateProductModal");
+                    })
+                    .catch(function (error) {
+                        console.error('Error loading content:', error);
+                    })
+            });
+        });
+
+        var editButtons = document.querySelectorAll(".delete-attribute");
+        editButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+
+                var attributeId = this.getAttribute("data-attribute-id");
+                var modalContent = document.getElementById("modal-content");
+
+                // Load content using fetch
+                fetch('/Products/Attributes/DeleteAttribute/' + attributeId)
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (html) {
+                        modalContent.innerHTML = html;
+                    })
+                    .catch(function (error) {
+                        console.error('Error loading content:', error);
+                    });
+            });
+        });
+    }
+
+    //Create Product Function
+    function CreateProduct(form) {
+        event.preventDefault();
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/Products/CreateAction",
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    // $(form).closest(".modal").modal("hide");
+                    $('.modal-backdrop').remove();
+                    $('#ProductModal').modal('hide');
+                    getJsonData();
+                }
+                ShowMessageDialog(response.success ? "success" : "error", response.message);
+            },
+            error: function (xhr, status, error) {
+                ShowMessageDialog("error", "Product Didn't Created successfully!!!")
+            }
+        });
+    }
+
+    //Update Product Function
+    function UpdateProduct(form) {
+        event.preventDefault();
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/Products/UpdateAction",
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    $('.modal-backdrop').remove();
+                    $('#ProductModal').modal('hide');
+                    getJsonData();
+                }
+
+                ShowMessageDialog(response.success ? "success" : "error", response.message);
+            },
+            error: function (xhr, status, error) {
+                ShowMessageDialog("error", error)
+            }
+        });
+    }
+
+    //Delete Product Function
+    function DeleteProduct(productId) {
+        Swal.fire({
+            title: 'Are you sure you want to delete this Product?',
+            showCancelButton: true,
+            confirmButtonText: 'Save',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Products/Delete',
+                    type: 'POST',
+                    data: { id: productId },
+                    headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                    success: function (response) {
+                        if (response.success) {
+                            $('.modal-backdrop').remove();
+                            $('#ProductModal').modal('hide');
+                            getJsonData();
+                        }
+
+                        ShowMessageDialog(response.success ? "success" : "error", response.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    //Sweet Alert
+    function ShowMessageDialog(icon, message) {
+        Swal.fire({
+            icon: icon || 'success',
+            title: "Poser",
+            text: message || "Operation Success",
+            timer: 5000
+        })
+    }
+
+</script>

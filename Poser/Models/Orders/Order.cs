@@ -18,6 +18,13 @@ namespace Poser.Models.Orders
         public double Total { get; set; }
 
         public bool IsPaid { get; set; } = true;
+
+        [Display(Name = "PCustomer")]
+        public int? CustomerId { get; set; }
+
+        [ForeignKey("CustomerId")]
+        public Customer Customer{ get; set; }
+
         public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 
     }

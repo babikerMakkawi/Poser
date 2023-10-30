@@ -52,7 +52,6 @@
 <script>
     //  ATTRIBUTES VALUES JS CONTROLLERS
     function CreateAttributeValueModal(attributeId) {
-
         var modalContent = document.getElementById("AttributeValue-modal-content");
 
         fetch('/Products/AttributeValues/CreateAttributeValue/' + attributeId, {
@@ -61,17 +60,17 @@
                 "Content-Type": "text/html"
             }
         })
-            .then(function (response) {
-                return response.text();
-            })
-            .then(function (html) {
-                modalContent.innerHTML = html;
-
-                $.validator.unobtrusive.parse("#CreateAttributeValueModal");
-            })
-            .catch(function (error) {
-                console.error('Error loading content:', error);
-            });
+        .then(function (response) {
+            return response.text();
+        })
+        .then(function (html) {
+            modalContent.innerHTML = html;
+            //Model Validator
+            $.validator.unobtrusive.parse("#CreateAttributeValueModal");
+        })
+        .catch(function (error) {
+            console.error('Error loading content:', error);
+        });
     }
 
     function CreateAttributeValue(form) {
@@ -87,10 +86,10 @@
                     // $('.modal-backdrop').remove();
                     // $('#AttributeModal').modal('hide');
                 }
-                showSuccessMessage(response.success ? "success" : "error", response.message);
+                ShowMessageDialog(response.success ? "success" : "error", response.message);
             },
             error: function (xhr, status, error) {
-                showSuccessMessage("error", "Attribute Didn't Created successfully!!!")
+                ShowMessageDialog("error", "Attribute Didn't Created successfully!!!")
             }
         });
 
@@ -133,10 +132,10 @@
                     $('#AttributeModal').modal('hide');
                 }
 
-                showSuccessMessage(response.success ? "success" : "error", response.message);
+                ShowMessageDialog(response.success ? "success" : "error", response.message);
             },
             error: function (xhr, status, error) {
-                showSuccessMessage("error", error)
+                ShowMessageDialog("error", error)
             }
         });
     }
@@ -159,7 +158,7 @@
                             $('#AttributeModal').modal('hide');
                         }
 
-                        showSuccessMessage(response.success ? "success" : "error", response.message);
+                        ShowMessageDialog(response.success ? "success" : "error", response.message);
                     },
                     error: function (xhr, status, error) {
                         console.log("Error: " + error);
@@ -257,7 +256,7 @@
                 let table = new DataTable('#data-table');
             })
             .catch(function (error) {
-                showSuccessMessage("error", "Attribute Didn't Fetched Successfully!" + error)
+                ShowMessageDialog("error", "Attribute Didn't Fetched Successfully!" + error)
 
                 console.log("Something Went Wrong!" + error);
             });
@@ -312,7 +311,6 @@
         });
     }
 
-
     //Create Attribute Function
     function CreateAttribute(form) {
         event.preventDefault();
@@ -329,10 +327,10 @@
                     $('#AttributeModal').modal('hide');
                     getJsonData();
                 }
-                showSuccessMessage(response.success ? "success" : "error", response.message);
+                ShowMessageDialog(response.success ? "success" : "error", response.message);
             },
             error: function (xhr, status, error) {
-                showSuccessMessage("error", "Attribute Didn't Created successfully!!!")
+                ShowMessageDialog("error", "Attribute Didn't Created successfully!!!")
             }
         });
     }
@@ -353,10 +351,10 @@
                     getJsonData();
                 }
 
-                showSuccessMessage(response.success ? "success" : "error", response.message);
+                ShowMessageDialog(response.success ? "success" : "error", response.message);
             },
             error: function (xhr, status, error) {
-                showSuccessMessage("error", error)
+                ShowMessageDialog("error", error)
             }
         });
     }
@@ -381,7 +379,7 @@
                             getJsonData();
                         }
 
-                        showSuccessMessage(response.success ? "success" : "error", response.message);
+                        ShowMessageDialog(response.success ? "success" : "error", response.message);
                     },
                     error: function (xhr, status, error) {
                         console.log("Error: " + error);
@@ -393,9 +391,8 @@
         })
     }
 
-
     //Sweet Alert
-    function showSuccessMessage(icon, message) {
+    function ShowMessageDialog(icon, message) {
         Swal.fire({
             icon: icon || 'success',
             title: "Poser",

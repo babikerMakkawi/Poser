@@ -8,13 +8,13 @@ namespace Poser.Models.Products
         [Key]
         public int Id { get; set; }
 
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
         public int ProductStockId { get; set; }
         public int AttributeId { get; set; }
         public int AttributeValueId { get; set; }
 
         [ForeignKey("ProductId")]
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
 
         [ForeignKey("ProductStockId")]
         public ProductStock ProductStock { get; set; }

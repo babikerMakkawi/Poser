@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Poser.Data;
-using Poser.Models.Products;
+using Poser.Core.Interfaces;
+using Poser.Core;
+using Poser.EF;
 
 namespace Poser.Controllers.Products
 {
@@ -15,10 +10,12 @@ namespace Poser.Controllers.Products
     public class AttributesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AttributesController(ApplicationDbContext context)
+        public AttributesController(ApplicationDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -44,23 +41,22 @@ namespace Poser.Controllers.Products
         
         [HttpPost]
         [Route("CreateAction")]
-        public ActionResult CreateAction(Models.Products.Attribute attribute)
+        public ActionResult CreateAction(Poser.Core.Models.Products.Attribute attribute)
         {
             if (attribute.Name == null)
             {
                 return Json(new { success = false, message = "Attribute Name Is Required!" });
             }
-            if (_context.Attributes.Where(u => u.Name == attribute.Name).FirstOrDefault() != null)
+
+            if (_unitOfWork.Attributes.FindAsNoTracking(a => a.Name == attribute.Name) != null)
             {
                 return Json(new { success = false, message = "This Name is Already in Use!" });
             }
 
-            _context.Attributes.Add(attribute);
-            _context.SaveChanges();
+            _unitOfWork.Attributes.Add(attribute);
+            _unitOfWork.complete();
 
             return Json(new { success = true, message = "Attribute Created Successfully" });
-
-            //ModelState.AddModelError(nameof(Models.Products.Attribute.Name), "This Name is Already in Use.");
         }
 
 
@@ -75,10 +71,7 @@ namespace Poser.Controllers.Products
         {
             try
             {
-                var attribute = _context.Attributes
-                    .Include(a => a.AttributeValues)
-                    .Where(a => a.Id == id)
-                    .FirstOrDefault();
+                var attribute = _unitOfWork.Attributes.Find(a => a.Id == id, new []{ "AttributeValues" });
 
                 return PartialView("../Dashboard/Attributes/Partials/_EditAttributePartial", attribute);
             }
@@ -90,20 +83,20 @@ namespace Poser.Controllers.Products
         }
         
         [HttpPost("UpdateAction")]
-        public ActionResult UpdateAction(Models.Products.Attribute attribute)
+        public ActionResult UpdateAction(Poser.Core.Models.Products.Attribute attribute)
         {
             if (attribute.Name == null)
             {
                 return Json(new { success = false, message = "Please Fill The Fields!" });
             }
 
-            if (_context.Attributes.AsNoTracking().SingleOrDefault(a => a.Name == attribute.Name) != null)
+            if(_unitOfWork.Attributes.FindAsNoTracking(a => a.Name == attribute.Name) != null)
             {
                 return Json(new { success = false, message = "This Name is Already in Use!" });
             }
 
-            _context.Entry(attribute).State = EntityState.Modified;
-            _context.SaveChanges();
+            _unitOfWork.Attributes.Update(attribute);
+            _unitOfWork.complete();
 
             return Json(new { success = true, message = "Attribute Updated successfully" });
         }
@@ -117,11 +110,12 @@ namespace Poser.Controllers.Products
 
         [HttpGet]
         [Route("DeleteAttribute/{id}")]
-        public IActionResult DeleteAttribute(int id)
+        public async Task<IActionResult> DeleteAttribute(int id)
         {
             try
             {
-                return PartialView("../Dashboard/Attributes/Partials/_DeleteAttributePartial", _context.Attributes.Find(id));
+                var attribute = await _unitOfWork.Attributes.FindAsync(a => a.Id == id);
+                return PartialView("../Dashboard/Attributes/Partials/_DeleteAttributePartial", attribute);
             }
             catch (Exception ex)
             {
@@ -135,16 +129,16 @@ namespace Poser.Controllers.Products
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id)
         {
-            var attribute = await _context.Attributes.FindAsync(id);
+            var attribute = await _unitOfWork.Attributes.FindAsync(a => a.Id == id);
 
             if (attribute == null)
             {
                 return Json(new { success = false, message = "Attribute Not Found!" });
             }
 
-            _context.Attributes.Remove(attribute);
-            _context.SaveChanges();
-
+            _unitOfWork.Attributes.Delete(attribute);
+            _unitOfWork.complete();
+            
             return  Json(new { success = true, message = "Attribute Deleted Successfully" });
         }
 
@@ -153,13 +147,13 @@ namespace Poser.Controllers.Products
         //Partials Actions
         [HttpGet]
         [Route("GetJsonData")]
-        public JsonResult GetJsonData()
+        public async Task<JsonResult> GetJsonData()
         {
             try
             {
-                return Json(_context.Attributes
-                    .Include(a => a.AttributeValues)
-                    .ToList());
+                var attributes = await _unitOfWork.Attributes.FindAllAsync(new[] {"AttributeValues"});
+
+                return Json(attributes);
             }
             catch (Exception ex)
             {
@@ -167,138 +161,5 @@ namespace Poser.Controllers.Products
             }
         }
 
-
-
-        private bool AttributeExists(int id)
-        {
-          return _context.Attributes.Any(e => e.Id == id);
-        }
-
     }
 }
-
-
-/*
-        // GET: Attributes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Attributes == null)
-            {
-                return NotFound();
-            }
-
-            var attribute = await _context.Attributes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (attribute == null)
-            {
-                return NotFound();
-            }
-
-            return View(attribute);
-        }
-
-        // GET: Attributes/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Models.Products.Attribute attribute)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(attribute);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(attribute);
-        }
-
-        // GET: Attributes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Attributes == null)
-            {
-                return NotFound();
-            }
-
-            var attribute = await _context.Attributes.FindAsync(id);
-            if (attribute == null)
-            {
-                return NotFound();
-            }
-            return View(attribute);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Models.Products.Attribute attribute)
-        {
-            if (id != attribute.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(attribute);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AttributeExists(attribute.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(attribute);
-        }
-
-        // GET: Attributes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Attributes == null)
-            {
-                return NotFound();
-            }
-
-            var attribute = await _context.Attributes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (attribute == null)
-            {
-                return NotFound();
-            }
-
-            return View(attribute);
-        }
-
-        // POST: Attributes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Attributes == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Attributes'  is null.");
-            }
-            var attribute = await _context.Attributes.FindAsync(id);
-            if (attribute != null)
-            {
-                _context.Attributes.Remove(attribute);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        */

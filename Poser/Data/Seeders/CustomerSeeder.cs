@@ -1,17 +1,11 @@
-﻿using Poser.Data;
-using Poser.Models;
-using System;
-using System.Collections.Generic;
-using System.Numerics;
-using Bogus;
-using Poser.Models.Products;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Bogus;
+using Poser.EF;
+using Poser.Core.Models;
 
 namespace Poser.Data.Seeders
 {
     public class CustomerSeeder
     {
-        private static readonly Random random = new Random();
         private static readonly Faker faker = new Faker();
 
         public static void SeedData(ApplicationDbContext context)
@@ -22,19 +16,12 @@ namespace Poser.Data.Seeders
                 {
                     Name = faker.Name.FullName(),
                     Email = faker.Internet.Email(),
-                    PhoneNumber = faker.Lorem.Paragraph(),
+                    PhoneNumber = faker.Phone.PhoneNumber("05########"),
                     Address = faker.Address.FullAddress(),
                 };
                 context.Customers.Add(customer);
             }
-            try
-            {
             context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
         }
     }
 }

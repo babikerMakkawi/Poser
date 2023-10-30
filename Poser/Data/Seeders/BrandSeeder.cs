@@ -4,16 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Bogus;
-using Poser.Models.Products;
+using Poser.Core.Models.Products;
+using Poser.Core.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Poser.EF;
 
 namespace Poser.Data.Seeders
 {
     public class BrandSeeder
     {
-        private static readonly Random random = new Random();
-        private static readonly Faker faker = new Faker();
-
         public static void SeedData(ApplicationDbContext context)
         {
             var brands = new Brand[]
@@ -27,7 +26,7 @@ namespace Poser.Data.Seeders
 
             foreach (var my_brands in brands)
             {
-                context.Brands.Add(my_brands);
+                context.Brands.AddRange(my_brands);
             }
             context.SaveChanges();
         }

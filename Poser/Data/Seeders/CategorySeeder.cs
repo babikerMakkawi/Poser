@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Bogus;
-using Poser.Models.Products;
+using Poser.Core.Models.Products;
+using Poser.Core.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Poser.EF;
 
 namespace Poser.Data.Seeders
 {

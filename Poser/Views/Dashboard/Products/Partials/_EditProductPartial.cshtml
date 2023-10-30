@@ -1,0 +1,113 @@
+﻿@model Poser.Core.Models.Products.Product
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Create New Product</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<form id="updateProductModal" onsubmit="UpdateProduct(this)">
+    <div class="modal-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Image" class="control-label"></label>
+            <input asp-for="Image" class="form-control" />
+            <span asp-validation-for="Image" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="BrandId" class="control-label"></label>
+            <select asp-for="BrandId" class="form-control" asp-items="ViewBag.Brands"></select>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CategoryId" class="control-label"></label>
+            <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
+        </div>
+
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+            </label>
+        </div>
+
+
+        <div class="form-group">
+            <input type="submit" value="Update Product" class="btn btn-primary" />
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
+
+<!-- Datatable -->
+@* <div class="card mt-3">
+
+    <div class="card-header">
+        <button class="btn btn-primary"
+            data-bs-toggle="modal"
+                data-bs-target="#AttributeValueModal"
+            onclick="CreateAttributeValueModal(@Model.Id)">
+            New Attribute Value
+        </button>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-light table-hover m-0 w-100" id="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Attribute Value</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="json-table-viewer">
+                @if (Model.AttributeValues.Count > 0)
+                {
+                    @foreach (var attributeVale in Model.AttributeValues)
+                    {
+                        <tr>
+                            <td>@attributeVale.Id</td>
+                            <td>@attributeVale.Name</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-info text-white" 
+                                            data-bs-toggle="modal" data-bs-target="#AttributeValueModal"
+                                            onclick="UpdateAttributeValueModal(@attributeVale.Id)">
+                                        Edit
+                                    </button>
+
+                                    <button type="button" class="btn btn-warning text-white"
+                                            onclick="DeleteAttributeValue(@attributeVale.Id)">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center w-100 text-danger fs-4 p-5">This Attribute Has No Values</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div> *@
