@@ -45,6 +45,32 @@ namespace Poser.EF.Repositories
 
             return query.SingleOrDefault(criteria);
         }
+
+
+        public T Find(Expression<Func<T, bool>>[] criteriaArray, string[] includes = null)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            if (criteriaArray != null && criteriaArray.Any())
+            {
+                foreach (var criteria in criteriaArray)
+                {
+                    query = query.Where(criteria);
+                }
+            }
+
+            return query.SingleOrDefault();
+        }
+
+
         public async Task<T> FindAsync(Expression<Func<T, bool>> criteria, string[] includes = null)
         {
             IQueryable<T> query = _context.Set<T>();
@@ -55,6 +81,29 @@ namespace Poser.EF.Repositories
 
             return await query.SingleOrDefaultAsync(criteria);
         }
+        public async Task<T> FindAsync(Expression<Func<T, bool>>[] criteriaArray, string[] includes = null)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            if (criteriaArray != null && criteriaArray.Any())
+            {
+                foreach (var criteria in criteriaArray)
+                {
+                    query = query.Where(criteria);
+                }
+            }
+
+            return await query.SingleOrDefaultAsync();
+        }
+
 
         public T FindAsNoTracking(Expression<Func<T, bool>> criteria, string[] includes = null)
         {
@@ -125,6 +174,8 @@ namespace Poser.EF.Repositories
 
             return await query.ToListAsync();
         }
+
+        // One Criteria 
         public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, string[] includes = null)
         {
             IQueryable<T> query = _context.Set<T>();
@@ -135,6 +186,31 @@ namespace Poser.EF.Repositories
 
             return await query.Where(criteria).ToListAsync();
         }
+        
+        // Multible Criteria 
+        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>>[] criteriaArray, string[] includes = null)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            if (criteriaArray != null && criteriaArray.Any())
+            {
+                foreach (var criteria in criteriaArray)
+                {
+                    query = query.Where(criteria);
+                }
+            }
+
+            return await query.ToListAsync();
+        }
+
 
         public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int take, int skip)
         {
@@ -163,6 +239,8 @@ namespace Poser.EF.Repositories
             return await query.ToListAsync();
         }
 
+
+        // ADD METHODS
         public T Add(T entity)
         {
             _context.Set<T>().Add(entity);
@@ -232,5 +310,6 @@ namespace Poser.EF.Repositories
         {
             return await _context.Set<T>().CountAsync(criteria);
         }
+
     }
 }

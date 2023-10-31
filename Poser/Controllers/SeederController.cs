@@ -51,7 +51,7 @@ namespace Poser.Controllers
 
             foreach (string name in names)
             {
-                _context.Database.ExecuteSqlRaw($"DELETE FROM {name}; DBCC CHECKIDENT ('{name}', RESEED, 0);");
+                _context.Database.ExecuteSqlRaw($"DELETE FROM {name}; DBCC CHECKIDENT ('{name}', RESEED, 1);");
             }
 
             Data.Seeders.CategorySeeder.SeedData(_context);

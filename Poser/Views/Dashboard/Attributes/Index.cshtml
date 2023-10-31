@@ -32,7 +32,7 @@
 
 <!-- Attribute Modal -->
 <div class="modal fade" id="AttributeModal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-dialog">
         <div class="modal-content" id="modal-content">
             @* modal content *@
         </div>
@@ -49,8 +49,154 @@
 </div>
 
 
-<script>
-    //  ATTRIBUTES VALUES JS CONTROLLERS
+@section Scripts{
+    <script>
+
+    //  ATTRIBUTES JS CONTROLLERS
+    document.addEventListener("DOMContentLoaded", function () {
+        getJsonData();
+    });
+
+    //Fetch Attributes Data
+    function getJsonData() {
+        fetch('/Products/Attributes/getjsondata/')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (attributes) {
+            var attributesHtml = '';
+
+            let table = new DataTable('#data-table');
+            table.clear().draw();
+
+            if (attributes.length > 0) {
+                attributes.forEach(function (attribute) {
+                    attributesHtml += '<tr>' +
+                    '<td>' + attribute.id + '</td>' +
+                    '<td><a href="/Products/Attributes/Details/' + attribute.id + '">' + attribute.name + '</a></td>' +
+                    '<td>' +
+                    '<div class="btn-group" role="group" aria-label="Basic example">' +
+
+                    '<button type="button" class="btn btn-info text-white edit-attribute"' +
+                    ' data-bs-toggle="modal" data-bs-target="#AttributeModal"' +
+                    ' data-attribute-id="' + attribute.id + '">' +
+                    'Edit' +
+                    '</button>' +
+
+                    '<button type="button" class="btn btn-warning text-white delete-attribute"' +
+                    ' data-bs-toggle="modal" data-bs-target="#AttributeModal"' +
+                    ' data-attribute-id="' + attribute.id + '">' +
+                    'Delete' +
+                    '</button>' +
+
+                    '</div>' +
+                    '</td>' +
+                    '</tr>';
+                });
+            }
+            else {
+                attributesHtml += '<tr>' +
+                    '<td colspan="4" class="text-center fs-5 py-5 text-danger">There`s No Attributes Data Available</td>' +
+                    '<td style="display:none;"></td>' +
+                    '<td style="display:none;"></td>' +
+                    '<td style="display:none;"></td>' +
+                    '</tr>';
+            }
+
+            table.rows.add($(attributesHtml)).draw();
+        })
+        .then(function () {
+            AllButtonListeners();
+        })
+        .then(function () {
+            let table = new DataTable('#data-table');
+        })
+        .catch(function (error) {
+            ShowMessageDialog("error", "Attribute Didn't Fetched Successfully!" + error)
+
+            console.log("Something Went Wrong!" + error);
+        });
+    }
+
+
+    //Fetch AttributeValues Data
+    function getAttributeValuesJsonData(id) {
+        fetch('/Products/AttributeValues/GetJsonData/' + id)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (attributeValues) {
+
+            var attributeValuesHtml = '';
+
+            if (attributeValues.length > 0) {
+                    attributeValues.forEach(function (AttributeValue) {
+                    attributeValuesHtml += `
+                        <tr>
+                            <td>` + AttributeValue.id + `</td>
+                            <td>` + AttributeValue.name + `</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-info text-white"
+                                    data-bs-toggle="modal" data-bs-target="#AttributeValueModal"
+                                    onclick="UpdateAttributeValueModal(` + AttributeValue.id + `,` + AttributeValue.attributeId + `)">
+                                    Edit
+                                    </button>
+
+                                    <button type="button" class="btn btn-warning text-white"
+                                    onclick="DeleteAttributeValue(` + AttributeValue.id + `,` + AttributeValue.attributeId + `)">
+                                    Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+
+                });
+            }
+            else {
+                attributeValuesHtml += `
+                    <tr>
+                        <td colspan="3" class="text-center w-100 text-danger p-5">This Attribute Has No Values</td>
+                    </tr>
+                `;
+            }
+
+            document.getElementById('attributeValue-data-table').innerHTML = attributeValuesHtml;
+        })
+        .catch(function (error) {
+            ShowMessageDialog("error", "Attribute Values Didn't Fetched Successfully!" + error)
+
+            console.log("Something Went Wrong!" + error);
+        });
+    }
+
+    // Create Attribute
+    document.getElementById("create-Attribute").addEventListener("click", function () {
+        var modalContent = document.getElementById("modal-content");
+
+        fetch('/Products/Attributes/CreateAttribute/', {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/html"
+            }
+        })
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (html) {
+                modalContent.innerHTML = html;
+
+                $.validator.unobtrusive.parse('#createAttributeModal');
+            })
+            .catch(function (error) {
+                console.error('Error loading content:', error);
+            });
+    });
+
+
+
+    // ATTRIBUTES VALUES JS CONTROLLERS
     function CreateAttributeValueModal(attributeId) {
         var modalContent = document.getElementById("AttributeValue-modal-content");
 
@@ -66,7 +212,7 @@
         .then(function (html) {
             modalContent.innerHTML = html;
             //Model Validator
-            $.validator.unobtrusive.parse("#CreateAttributeValueModal");
+            // $.validator.unobtrusive.parse("#CreateAttributeValueModal");
         })
         .catch(function (error) {
             console.error('Error loading content:', error);
@@ -77,14 +223,22 @@
         event.preventDefault();
         var formData = $(form).serialize();
 
+            var formObject = {};
+            $.each(formData.split('&'), function (index, field) {
+                var fieldData = field.split('=');
+                formObject[fieldData[0]] = decodeURIComponent(fieldData[1].replace(/\+/g, ' '));
+            });
+
         $.ajax({
             type: "POST",
             url: "/Products/AttributeValues/CreateAction",
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    // $('.modal-backdrop').remove();
-                    // $('#AttributeModal').modal('hide');
+                    $('#AttributeValueModal').modal('hide');
+                    $('#AttributeModal').modal('show');
+
+                    getAttributeValuesJsonData(formObject.AttributeId);
                 }
                 ShowMessageDialog(response.success ? "success" : "error", response.message);
             },
@@ -94,33 +248,35 @@
         });
 
     }
-    
-    function UpdateAttributeValueModal(attributeId){
 
-        // $('#AttributeModal').modal('hide');
-        // $('.modal-backdrop').remove();
+    function UpdateAttributeValueModal(attributeValueId, attributeId) {
 
         var modalContent = document.getElementById("AttributeValue-modal-content");
         modalContent.innerHTML = "";
 
-        fetch('/Products/AttributeValues/EditAttributeValue/' + attributeId)
+        fetch('/Products/AttributeValues/EditAttributeValue/' + attributeValueId)
             .then(function (response) {
                 return response.text();
             })
             .then(function (html) {
                 modalContent.innerHTML = html;
 
-                $.validator.unobtrusive.parse("#updateAttributeValueModal");
+                getAttributeValuesJsonData(attributeId);
             })
             .catch(function (error) {
                 console.error('Error loading content:', error);
-            })
-
+            });
     }
 
     function UpdateAttributeValue(form) {
         event.preventDefault();
         var formData = $(form).serialize();
+
+        var formObject = {};
+        $.each(formData.split('&'), function (index, field) {
+            var fieldData = field.split('=');
+            formObject[fieldData[0]] = decodeURIComponent(fieldData[1].replace(/\+/g, ' '));
+        });
 
         $.ajax({
             type: "POST",
@@ -128,8 +284,10 @@
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    $('.modal-backdrop').remove();
-                    $('#AttributeModal').modal('hide');
+                    $('#AttributeValueModal').modal('hide');
+                    $('#AttributeModal').modal('show');
+
+                    getAttributeValuesJsonData(formObject.AttributeId);
                 }
 
                 ShowMessageDialog(response.success ? "success" : "error", response.message);
@@ -140,7 +298,7 @@
         });
     }
     
-    function DeleteAttributeValue(attributeValueId) {
+    function DeleteAttributeValue(attributeValueId, attributeId) {
         Swal.fire({
             title: 'Are you sure you want to delete this Attribute Value?',
             showCancelButton: true,
@@ -154,8 +312,7 @@
                     // headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
                     success: function (response) {
                         if (response.success) {
-                            $('.modal-backdrop').remove();
-                            $('#AttributeModal').modal('hide');
+                             getAttributeValuesJsonData(attributeId);
                         }
 
                         ShowMessageDialog(response.success ? "success" : "error", response.message);
@@ -173,96 +330,7 @@
 
 
 
-    //  ATTRIBUTES JS CONTROLLERS
-    document.addEventListener("DOMContentLoaded", function () {
-        getJsonData();
-    });
-
-    document.getElementById("create-Attribute").addEventListener("click", function () {
-        var modalContent = document.getElementById("modal-content");
-
-        fetch('/Products/Attributes/CreateAttribute/', {
-                method: "GET",
-                headers: {
-                    "Content-Type": "text/html"
-                }
-            })
-            .then(function (response) {
-                return response.text();
-            })
-            .then(function (html) {
-                modalContent.innerHTML = html;
-
-                $.validator.unobtrusive.parse("#createAttributeModal");
-            })
-            .catch(function (error) {
-                console.error('Error loading content:', error);
-            });
-    });
-
-
-    //Fetch Data
-    function getJsonData() {
-        fetch('/Products/Attributes/getjsondata/')
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (attributes) {
-                var attributesHtml = '';
-
-                let table = new DataTable('#data-table');
-                table.clear().draw();
-
-                if (attributes.length > 0) {
-                    attributes.forEach(function (attribute) {
-                        attributesHtml += '<tr>' +
-                            '<td>' + attribute.id + '</td>' +
-                            '<td><a href="/Products/Attributes/Details/' + attribute.id + '">' + attribute.name + '</a></td>' +
-                            '<td>' +
-                                '<div class="btn-group" role="group" aria-label="Basic example">' +
-
-                                '<button type="button" class="btn btn-info text-white edit-attribute"' +
-                            ' data-bs-toggle="modal" data-bs-target="#AttributeModal"' +
-                                ' data-attribute-id="' + attribute.id + '">' +
-                                'Edit' +
-                                '</button>' +
-
-                                '<button type="button" class="btn btn-warning text-white delete-attribute"' +
-                            ' data-bs-toggle="modal" data-bs-target="#AttributeModal"' +
-                                ' data-attribute-id="' + attribute.id + '">' +
-                                'Delete' +
-                                '</button>' +
-
-                                '</div>' +
-                            '</td>' +
-                            '</tr>';
-                    });
-                }
-                else {
-                    attributesHtml += '<tr>' +
-                        '<td colspan="4" class="text-center fs-5 py-5 text-danger">There`s No Attributes Data Available</td>' +
-                        '<td style="display:none;"></td>' +
-                        '<td style="display:none;"></td>' +
-                        '<td style="display:none;"></td>' +
-                        '</tr>';
-                }
-
-                table.rows.add($(attributesHtml)).draw();
-            })
-            .then(function () {
-                AllButtonListeners();
-            })
-            .then(function () {
-                let table = new DataTable('#data-table');
-            })
-            .catch(function (error) {
-                ShowMessageDialog("error", "Attribute Didn't Fetched Successfully!" + error)
-
-                console.log("Something Went Wrong!" + error);
-            });
-    }
-
-    //Edit & Delete Buttons Listeners
+    // Edit & Delete Buttons Listeners
     function AllButtonListeners() {
         // Edit Buttons
         var editButtons = document.querySelectorAll(".edit-attribute");
@@ -281,7 +349,9 @@
                     .then(function (html) {
                         modalContent.innerHTML = html;
 
-                        $.validator.unobtrusive.parse("#updateAttributeModal");
+                        getAttributeValuesJsonData(attributeId);
+
+                        // $.validator.unobtrusive.parse("#updateAttributeModal");
                     })
                     .catch(function (error) {
                         console.error('Error loading content:', error);
@@ -311,7 +381,7 @@
         });
     }
 
-    //Create Attribute Function
+    // Create Attribute Action
     function CreateAttribute(form) {
         event.preventDefault();
         var formData = $(form).serialize();
@@ -335,7 +405,7 @@
         });
     }
 
-    //Update Attribute Function
+    // Update Attribute Action
     function UpdateAttribute(form) {
         event.preventDefault();
         var formData = $(form).serialize();
@@ -346,8 +416,6 @@
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    $('.modal-backdrop').remove();
-                    $('#AttributeModal').modal('hide');
                     getJsonData();
                 }
 
@@ -359,7 +427,7 @@
         });
     }
 
-    //Delete Attribute Function
+    // Delete Attribute Action
     function DeleteAttribute(attributeId) {
         Swal.fire({
             title: 'Are you sure you want to delete this Attribute?',
@@ -391,7 +459,7 @@
         })
     }
 
-    //Sweet Alert
+    // Sweet Alert
     function ShowMessageDialog(icon, message) {
         Swal.fire({
             icon: icon || 'success',
@@ -400,5 +468,6 @@
             timer: 5000
         })
     }
-                
+
 </script>
+}

@@ -14,7 +14,11 @@ namespace Poser.Core.Interfaces
 
         // Find Methods
         T Find(Expression<Func<T, bool>> criteria, string[] includes = null);
+        T Find(Expression<Func<T, bool>>[] criteriaArray, string[] includes = null);
+
         Task<T> FindAsync(Expression<Func<T, bool>> criteria, string[] includes = null);
+        Task<T> FindAsync(Expression<Func<T, bool>>[] criteriaArray, string[] includes = null);
+
         T FindAsNoTracking(Expression<Func<T, bool>> criteria, string[] includes = null);
         Task<T> FindAsNoTrackingAsync(Expression<Func<T, bool>> criteria, string[] includes = null);
         IEnumerable<T> FindAll(Expression<Func<T, bool>> criteria, string[] includes = null);
@@ -27,7 +31,10 @@ namespace Poser.Core.Interfaces
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int skip, int take);
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int? skip, int? take,
             Expression<Func<T, object>> orderBy = null, string orderByDirection = OrderBy.Ascending);
-        
+
+        Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>>[] criteriaArray, string[] includes = null);
+
+
         // Add Methods
         T Add(T entity);
         Task<T> AddAsync(T entity);
@@ -36,10 +43,13 @@ namespace Poser.Core.Interfaces
 
         // Update Methods
         T Update(T entity);
+
         void Delete(T entity);
         void DeleteRange(IEnumerable<T> entities);
+
         void Attach(T entity);
         void AttachRange(IEnumerable<T> entities);
+
         int Count();
         int Count(Expression<Func<T, bool>> criteria);
         Task<int> CountAsync();

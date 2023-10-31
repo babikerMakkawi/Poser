@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Poser.Core.Interfaces;
-using Poser.Core;
 using Poser.EF;
 
 namespace Poser.Controllers.Products
@@ -9,12 +7,10 @@ namespace Poser.Controllers.Products
     [Route("Products/Attributes")]
     public class AttributesController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AttributesController(ApplicationDbContext context, IUnitOfWork unitOfWork)
+        public AttributesController(IUnitOfWork unitOfWork)
         {
-            _context = context;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,6 +20,7 @@ namespace Poser.Controllers.Products
             return View("../Dashboard/Attributes/index");
         }
 
+        //Create Attribute Partial
         [HttpGet]
         [Route("CreateAttribute/")]
         public IActionResult CreateAttribute()
@@ -38,7 +35,8 @@ namespace Poser.Controllers.Products
                 return StatusCode(500, "Internal Server Error");
             }
         }
-        
+
+        //Create Attribute Action
         [HttpPost]
         [Route("CreateAction")]
         public ActionResult CreateAction(Poser.Core.Models.Products.Attribute attribute)
@@ -61,10 +59,7 @@ namespace Poser.Controllers.Products
 
 
 
-
-
-
-
+        //Update Attribute Partial
         [HttpGet]
         [Route("EditAttribute/{id}")]
         public IActionResult EditAttribute(int id)
@@ -81,7 +76,8 @@ namespace Poser.Controllers.Products
                 return StatusCode(500, "Internal Server Error");
             }
         }
-        
+
+        //Update Attribute Action
         [HttpPost("UpdateAction")]
         public ActionResult UpdateAction(Poser.Core.Models.Products.Attribute attribute)
         {
@@ -103,11 +99,7 @@ namespace Poser.Controllers.Products
 
 
 
-
-
-
-
-
+        //Delete Attribute Partial
         [HttpGet]
         [Route("DeleteAttribute/{id}")]
         public async Task<IActionResult> DeleteAttribute(int id)
@@ -125,6 +117,7 @@ namespace Poser.Controllers.Products
 
         }
 
+        //Delete Attribute Action
         [HttpPost("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id)
@@ -138,13 +131,13 @@ namespace Poser.Controllers.Products
 
             _unitOfWork.Attributes.Delete(attribute);
             _unitOfWork.complete();
-            
+
             return  Json(new { success = true, message = "Attribute Deleted Successfully" });
         }
 
 
 
-        //Partials Actions
+        //GetJsonData
         [HttpGet]
         [Route("GetJsonData")]
         public async Task<JsonResult> GetJsonData()

@@ -35,7 +35,7 @@
     <div class="card-header">
         <button class="btn btn-primary"
             data-bs-toggle="modal"
-                data-bs-target="#AttributeValueModal"
+            data-bs-target="#AttributeValueModal"
             onclick="CreateAttributeValueModal(@Model.Id)">
             New Attribute Value
         </button>
@@ -50,8 +50,8 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="json-table-viewer">
-                @if (Model.AttributeValues.Count > 0)
+            <tbody id="attributeValue-data-table">
+                @* @if (Model.AttributeValues.Count > 0)
                 {
                     @foreach (var attributeVale in Model.AttributeValues)
                     {
@@ -80,7 +80,7 @@
                     <tr>
                         <td colspan="3" class="text-center w-100 text-danger fs-4 p-5">This Attribute Has No Values</td>
                     </tr>
-                }
+                } *@
             </tbody>
         </table>
     </div>
